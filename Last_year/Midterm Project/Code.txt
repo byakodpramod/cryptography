@@ -1,0 +1,49 @@
+p = 837583943092107483758343358937591
+Rp.<x> = GF(p)[]
+Rpm.<x> = QuotientRing(Rp,x^6+x-44)
+ID = 113298315113383597113823695113030435
+base_index = 40
+prev_index = 2000000
+prev_a = 1241481482405997752375201+1
+prev_b = 75065157973396701381714549062811+1
+
+A = 10^86*ID+10^84*base_index+prev_index
+poly = (x^5+2)^A
+min_a = prev_a
+min_b = prev_b
+i = prev_index
+
+while (i < 25*10^84):
+    flag = 0
+    max_a = 0
+    max_b = 0
+
+    factor_poly = poly.lift().factor()
+    ls_poly = list(factor_poly)
+
+    factor_unit = factor_poly.unit().lift().factor()
+    ls_unit = list(factor_unit)
+
+    for e in ls_poly:
+        if (e[0].degree(x) > 1):
+            flag = 1
+            break
+    if (flag == 1):
+        poly = poly*(x^5+2)
+        i = i + 1
+        continue
+    else:
+        max_a = ls_unit[-1][0]
+        max_b = ls_poly[-1][0].coefficients()[0]
+        if (max_b < min_b):
+            min_a = max_a
+            min_b = max_b
+            print(str(i) + ': ' + str(factor_poly))
+            print('min b: ' + str(min_b))
+            print('percentage of b: ' + str(1.0*ZZ(min_b)/ZZ(p)))
+            print('unit: ' + str(factor_unit))
+            print('min a: '+ str(min_a))
+            print('percentage of a: ' + str(1.0*ZZ(min_a)/ZZ(p)))
+            print('\n')                
+        poly = poly*(x^5+2)
+        i = i + 1
